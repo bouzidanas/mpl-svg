@@ -1,3 +1,2 @@
 matplotlib
 beautifulsoup4
-io
