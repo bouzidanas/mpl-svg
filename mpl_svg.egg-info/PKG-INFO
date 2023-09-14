@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: mpl-svg
-Version: 0.1.4
+Version: 0.1.5
 Summary: Reformat Matplotlib SVGs for easier access and customzation with CSS
 Home-page: https://github.com/bouzidanas/mpl-svg
 Author: Anas Bouzid
