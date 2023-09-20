@@ -299,7 +299,7 @@ def css_builder(styles={}):
 
     return css_svg_area + css_plot_area + css_plot_border, css_title + css_plot_area_text + css_axes + css_x_axis_label + css_x_axis + css_x_axis_text + css_y_axis_label + css_y_axis + css_y_axis_text + override_axes_css + css_plot_line + css_legend_background + css_legend_text
     
-def svg_plot(fig, id = None, styling = None, append_css = None):
+def svg_plot(fig, id = None, styling = None, append_css = ""):
     """Converts a matplotlib figure to SVG string"""
     
     svg_soup = BeautifulSoup(fig_to_svg(fig), 'lxml')
@@ -414,6 +414,6 @@ def svg_plot(fig, id = None, styling = None, append_css = None):
     else:
         combined_css = css_styles + path_styles_in_defs
 
-    html_style = "<style>\n" + combined_css + "\n</style>"
-    return html_style + svg_soup.prettify(), svg_soup.prettify(), combined_css
-
+    final_svg = svg_soup.find("svg")
+    html_style = "<style>\n" + combined_css + append_css + "\n</style>"
+    return html_style + final_svg.prettify(), final_svg.prettify(), combined_css + append_css

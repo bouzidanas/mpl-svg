@@ -299,9 +299,9 @@ def css_builder(styles={}):
 
     return css_svg_area + css_plot_area + css_plot_border, css_title + css_plot_area_text + css_axes + css_x_axis_label + css_x_axis + css_x_axis_text + css_y_axis_label + css_y_axis + css_y_axis_text + override_axes_css + css_plot_line + css_legend_background + css_legend_text
     
-def svg_plot(fig, id = None, styling = None, append_css = None):
+def svg_plot(fig, id = None, styling = None, append_css = ""):
     """Converts a matplotlib figure to SVG string"""
-    
+
     svg_soup = BeautifulSoup(fig_to_svg(fig), 'lxml')
 
     # add class to mpl svg element
@@ -392,8 +392,16 @@ def svg_plot(fig, id = None, styling = None, append_css = None):
     add_class(border_paths[0], "background")
 
     if len(border_paths) > 5:
+        patch_index = 1
         for border_path in border_paths[1:-4]:
-            add_class(border_path, "content")
+            add_class(border_path, "content transition-paths-" + str(patch_index))
+            patch_index += 1
+
+    line_paths = svg_soup.select(".figure > .axes > .line2d")
+    line_index = 1
+    for line_path in line_paths:
+        add_class(line_path, "transition-line-" + str(line_index))
+        line_index += 1
     
     svg_background_patch = svg_soup.select(".figure > .patch:first-child")
     if len(svg_background_patch) > 0:
@@ -414,6 +422,6 @@ def svg_plot(fig, id = None, styling = None, append_css = None):
     else:
         combined_css = css_styles + path_styles_in_defs
 
-    html_style = "<style>\n" + combined_css + "\n</style>"
-    return html_style + svg_soup.prettify(), svg_soup.prettify(), combined_css
-
+    final_svg = svg_soup.find("svg")
+    html_style = "<style>\n" + combined_css + append_css + "\n</style>"
+    return html_style + final_svg.prettify(), final_svg.prettify(), combined_css + append_css
